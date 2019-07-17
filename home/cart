@@ -1,0 +1,221 @@
+	<?php include '../common/ecom_dbconnect.php';
+	ob_start();
+	session_start() ?>
+
+
+
+	<html>
+	<head>
+		
+		<meta  name="size" content="width=device-width"	initial-scale="1"  >
+		<title>cart</title>
+		<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	</head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+	</style>
+
+</head>
+<body >
+	<nav class="navbar navbar-inverse navbar-fixed-top	">
+		<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+			<a class="navbar-brand" href="ecom_products.php" style="font-weight: bold;">Ajay Sehrawat</a>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+		<ul class="nav navbar-nav navbar-right">
+
+
+			<li style='font-size: 20px' ><a href="ecom_orders.php">  ViewOrders <span class="glyphicon glyphicon-shopping-cart	"></span></a></li>
+
+			<?php 	if(!isset($_SESSION['user_name']))
+			{
+				echo " <li style='font-size:20px' class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown' href='#''> <span class='glyphicon glyphicon-user '></span>Account<span class='caret'></span></a>
+				<ul class='dropdown-menu'>
+				<li style='font-size:20px' ><a href='../register/ecom_register.php'>Sign-up</a></li>
+				<li style='font-size:20px' ><a href='ecom_user_login.php'>Log-in</a></li>
+
+				</ul></li>";
+			} 
+			else
+			{
+				echo "<li style='font-weight:bold;font-size: 20px;'><a href=''>";
+				echo("<span class='glyphicon glyphicon-star'></span>"."welcome".' '.$_SESSION['user_name']);
+				echo "</a></li>";
+				echo "<li style='font-size: 20px' ><a href='ecom_user_logout.php'>  Logout <span class='glyphicon glyphicon-log-out	''></span></a></li>";
+			}
+			?>
+
+		</ul>
+			</div>
+	</div>
+</nav>
+
+<center><br><br>
+	<div class="well well-sm">
+		<h1>
+			<?php 
+				if(isset($_GET['order']))
+				{
+					echo "Buy Now";
+				}
+				else
+				{
+					echo "Your Cart";
+				}
+	 		?> 	
+	 	</h1>
+	</div>
+	<div class="container" style="overflow-x: auto;">
+		<table class="table table-bordered">
+			
+
+		
+
+			<?php   
+			if(isset($_SESSION['user_id']))
+			{
+				$user_id=$_SESSION['user_id'];
+				$sql="select * from cart where user_id='{$user_id}'";
+				$result=mysqli_query($con,$sql);
+				if (mysqli_num_rows($result)==0) {
+					echo "Your cart is empty !<br> Start Shopping....";
+				}
+				$total_price=0;
+				$local='../admin/';
+				while($row=mysqli_fetch_assoc($result))
+				{
+					$p_price=$row['prod_price'];
+					$p_title=$row['prod_title'];
+					$p_date=$row['date'];
+					$p_tmp_image=$row['prod_image'];
+					$cart_id=$row['cart_id'];;
+					$p_image=$local.$p_tmp_image;
+					$total_price+=$p_price;
+					$p_id=$row['prod_id'];
+					echo "<tbody>";
+					echo "<tr class='warning' style='font-weight:bold'>";
+					echo "<td> <img src='{$p_image}' height='50px'> </td>";
+				
+					echo "<td>{$p_title} </td>";
+					echo "<td>{$p_price}₹ </td>";
+				
+					echo "		<td>
+					<form action='ecom_cart.php?prod_id={$p_id}' method='post'>
+					<select name='sel_qty'>
+					<option>0</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					</select>
+
+					</td>";
+					echo "<td><a href='ecom_cart.php?cart_id={$cart_id}'>Remove</a></td>";
+					echo "
+			
+					<td><input type='submit' value='Buy' class='btn-success'></td>
+					</form>
+
+					";
+					echo "</tr>";
+					echo("</tbody>");
+
+				}
+				if(isset($_GET['cart_id']))
+				{
+					$delete_id=$_GET['cart_id'];
+					$query="delete from cart where cart_id={$delete_id}";
+					$result=mysqli_query($con,$query);
+					header("Location:ecom_cart.php?order=1");
+				}
+				if(isset($_GET['prod_id']) )
+				{
+					$prod_id=$_GET['prod_id'];
+					$user_name=$_SESSION['user_fname']."  ".$_SESSION['user_lname'];
+					$user_email=$_SESSION['user_email'];
+					$user_phone=$_SESSION['user_phone'];
+					$user_address=$_SESSION['user_address'];
+					$order_date=date("d,D,y ");
+					$order_qty=$_POST['sel_qty'];
+					$sql_qry="select * from products where prod_id='{$prod_id}'";
+					$res=mysqli_query($con,$sql_qry);
+					if(!$res)
+					{
+						die('query failed'.mysqli_error($con));
+					}
+					while($row=mysqli_fetch_array($res))
+					{
+						$prd_title=$row['prod_title'];
+						$prd_price=$row['prod_price'];
+						$prd_image=$row['prod_image'];
+						
+					}
+					$total_amt=$order_qty*$prd_price;
+					$query="insert into orders(`user_name`,`user_id`, `prod_title`, `prod_price`, `prod_image`, `user_phone`, `user_email`, `user_address`,`order_date`,`order_quantity`,`total_amount`) values('{$user_name}','{$user_id}','{$prd_title}','{$prd_price}','{$prd_image}','{$user_phone}','{$user_email}','{$user_address}','{$order_date}','{$order_qty}','{$total_amt}')";
+					if($order_qty>0)
+					{
+						$result1=mysqli_query($con,$query);
+						if(!$result1)
+					{
+						die('Your statement failed'.mysqli_error($con));
+					}
+
+					}
+					else if($order_qty==0 && isset($_GET['prod_id']))
+					{
+						echo "<center>
+				<h3 style='color:red'>Please select the Quantity to order</h3>
+			</center>";
+					}
+					
+					$update_qty="update products set prod_quantity=prod_quantity-'{$order_qty}' where prod_id='{$prod_id}'";
+					$result_updt=mysqli_query($con,$update_qty);
+
+				}
+
+			}
+
+			?>
+
+
+		</div>
+	</table>
+</div>
+
+<div style="font-size: 45px;color: orange"><?php if(!isset($_SESSION['user_id']))
+{
+	echo "<a href='ecom_user_login.php'> Please Login to View your Cart</a> ";
+} 
+
+?></div>
+<div class="container" style="background-color: #A5CAD2;color: #f1f1f1"><h1><?php 
+
+if(isset($_SESSION['user_id']) && isset($order_qty) && $order_qty>0)
+{
+	echo "<center><h1>Order Placed Successfully</h1></center>";
+	echo "<center><h1>Quantity:{$order_qty}</h1></center>";
+	echo "<center><h1>Price:{$prd_price}</h1></center>";
+	echo ("Grand Total :"." ₹".$prd_price*$order_qty);
+}
+?></h1></div>
+
+</center>
+
+</body>
+</html>
