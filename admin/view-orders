@@ -1,0 +1,137 @@
+	<?php include '../common/ecom_dbconnect.php';
+
+	session_start() ?>
+
+
+
+	<html>
+	<head>
+		<style type="text/css">
+			
+		</style>
+		<meta  name="size" content="width=device-width"	initial-scale="1"  >
+		<title>cart</title>
+		<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	</head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+	</style>
+
+	</head>
+	<body >
+		<nav class="navbar navbar-inverse 	">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Ecommerce</a>
+    </div>
+  
+    <ul class="nav navbar-nav navbar-right">
+    	<li style="font-size: 20px"><a href="ecom_add_product.php"><span class="glyphicon glyphicon-book"></span> Add Product</a></li>
+        <li style="font-size: 20px"><a href="ecom_create_admin.php"><span class="glyphicon glyphicon-plus-sign"></span> Create Admin</a></li>
+        <li class="dropdown" style="font-size: 20px"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-eye-open"></i> View Tables <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li style="font-size: 20px"><a href="ecom_user_tab.php">Users</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_products.php">Products</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_orders.php"> View Orders</a></li>
+        </ul>
+      </li>
+  
+      <li style="font-size: 20px"><a href="ecom_admin_logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+			
+			
+				<center><div class="well well-sm" style="font-weight: bold;color: #000;font-size: 30px;">View Orders</div>
+					<table class="table table-bordered">
+
+						<thead>
+							<tr class="success">
+								<th>Id</th>
+								<th>Username</th>
+								<th>Product</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Image</th>
+								<th>Phone</th>
+								<th>Email</th>
+								<th>Address</th>
+								<th>Date</th>
+								<th>Amount</th>
+							</tr>
+						</thead>	
+
+						<?php   
+						
+								
+						$sql="select * from orders order by order_id desc ";
+						$result=mysqli_query($con,$sql);
+						if (mysqli_num_rows($result)==0) {
+							echo "You have not placed any orders";
+						}
+						$local='../admin/';
+						while($row=mysqli_fetch_assoc($result))
+						{
+							$user_name=$row['user_name'];
+							$p_title=$row['prod_title'];
+							$p_price=$row['prod_price'];
+							$p_tmp_image=$row['prod_image'];
+							$phone=$row['user_phone'];
+							$email=$row['user_email'];
+							$address=$row['user_address'];
+							$order_date=$row['order_date'];
+							$order_id=$row['order_id'];
+							$p_image=$local.$p_tmp_image;
+							$order_qty=$row['order_quantity'];
+							$total_amt=$row['total_amount'];
+							
+							echo "<tbody>";
+							echo "<tr class='warning'>";
+							echo "<td>{$order_id} </td>";
+							echo "<td>{$user_name} </td>";
+							echo "<td>{$p_title} </td>";
+							echo "<td>{$p_price} </td>";
+							echo "<td>{$order_qty} </td>";
+							echo "<td> <img src='{$p_image}' height='50px'> </td>";
+							echo "<td>{$phone} </td>";
+							echo "<td>{$email} </td>";
+							echo "<td>{$address} </td>";
+							echo "<td>{$order_date} </td>";
+							echo "<td>{$total_amt} </td>";
+							echo "</tr>";
+							echo("</tbody>");
+
+						}
+						if(isset($_GET['delete_order_id']))
+						{
+							$delete_id=$_GET['delete_order_id'];
+							$query="delete from orders where order_id={$delete_id}";
+							$result=mysqli_query($con,$query);
+							header("Location:ecom_view_orders.php");
+						}
+						
+
+						?>
+
+
+					</div>
+				</table>
+			</div>
+
+			<div style="font-size: 40px;color: red"><?php if(!isset($_SESSION['admin_id']))
+						{
+							echo " !Please Login First ";
+						} 
+						
+						?></div>
+						
+						
+		</center>
+
+	</body>
+	</html>
