@@ -1,0 +1,16 @@
+<?php session_start() ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>logout</title>
+</head>
+<body>
+<?php 				$_SESSION['admin_name']=null;
+	                $_SESSION['admin_password']=null;
+	                $_SESSION['admin_fname']=null;
+	                $_SESSION['admin_lname']=null;
+	                $_SESSION['admin_id']=null;
+	                header("Location:ecom_log_admin.php");
+	                 ?>
+</body>
+</html>
