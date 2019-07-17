@@ -1,0 +1,52 @@
+<?php session_start(); 
+?>
+<?php include '../common/ecom_dbconnect.php'; ?>
+<!DOCTYPE html>
+<html>
+<head>
+		<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<title>admin</title>
+</head>
+<body>
+	<nav class="navbar navbar-inverse 	">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Ecommerce</a>
+    </div>
+  
+    <ul class="nav navbar-nav navbar-right">
+    	<li style="font-size: 20px"><a href="ecom_add_product.php"><span class="glyphicon glyphicon-book"></span> Add Product</a></li>
+        <li style="font-size: 20px"><a href="ecom_create_admin.php"><span class="glyphicon glyphicon-plus-sign"></span> Create Admin</a></li>
+        <li class="dropdown" style="font-size: 20px"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-eye-open"></i> View Tables <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li style="font-size: 20px"><a href="ecom_user_tab.php">Users</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_products.php">Products</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_orders.php"> View Orders</a></li>
+        </ul>
+      </li>
+  
+      <li style="font-size: 20px"><a href="ecom_admin_logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+<center><div class="well"><h1>Welcome to Admin</h1></div></center>
+<center><div class="jumbotron">
+	<h1>
+<?php echo ($_SESSION['admin_fname']."  ".$_SESSION['admin_lname']);	?>
+<?php  
+    if(!isset($_SESSION['admin_name']))
+    {
+        header("location:ecom_log_admin.php");
+    }
+    ?>
+
+	
+</h1>
+</div></center>
+</body>
+</html>
