@@ -1,0 +1,122 @@
+<html>
+<head>
+	<style type="text/css">
+		.form_center
+		{
+			width: 50%;
+		}
+		.alert
+		{
+			color: red;
+			font-size: 20px;
+		}
+	</style>
+	<meta  name="size" content="width=device-width"	initial-scale="1"  >
+	<title>register</title>
+	<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+</style>
+
+</head>
+<body >
+	<nav class="navbar navbar-inverse 	">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="ecom_admin.php">Admin</a>
+    </div>
+  
+    <ul class="nav navbar-nav navbar-right">
+    	<li style="font-size: 15px"><a href="ecom_add_product.php"><span class="glyphicon glyphicon-book"></span> Add Product</a></li>
+        <li style="font-size: 15px;font-weight: bold;"><a href="ecom_create_admin.php"><span class="glyphicon glyphicon-plus-sign"></span> Create Admin</a></li>
+        <li class="dropdown" style="font-size: 15px;font-weight: bold;"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-eye-open"></i> View Tables <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li style="font-size: 20px"><a href="ecom_user_tab.php">Users</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_products.php">Products</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_orders.php"> View Orders</a></li>
+        </ul>
+      </li>
+  
+      <li style="font-size: 15px;font-weight: bold;"><a href="ecom_admin_logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+	<center>
+		<div class="well well-sm" style="font-weight: bold;color: #000;font-size: 30px;">Create New Admin</div>
+		<div class="form_center">
+
+
+			<form action="ecom_create_admin.php" method="post">
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input input class="form-control input-lg"  id="email" type="text" class="form-control" name="fisrtname" placeholder="FirstName">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="lastname" placeholder="LastName">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="username" placeholder="UserName">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+					<input input class="form-control input-lg"  type="password" class="form-control" name="password" placeholder="PassWord">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="email" placeholder="Email">
+				</div><br>
+
+				<div class="input-group">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="phone" placeholder="Phone">
+				</div><br>
+				
+				<input type="submit" class="btn btn-primary btn-block" name="register">
+
+			</form>
+
+		</div>
+		<div class="alert">
+			<?php
+
+			include '../common/ecom_common.php'; 
+			include '../common/ecom_dbconnect.php';
+			if(isset($_POST['register']))
+			{
+				$fname=mysqli_real_escape_string($con,$_POST['fisrtname']);
+				$lname=mysqli_real_escape_string($con,$_POST['lastname']);
+				$uname=mysqli_real_escape_string($con,$_POST['username']);
+				$pass=mysqli_real_escape_string($con,$_POST['password']);
+				$email=mysqli_real_escape_string($con,$_POST['email']);
+				$phone=mysqli_real_escape_string($con,$_POST['phone']);
+				$enpass=password_hash($pass, PASSWORD_BCRYPT,array('cost=>10'));
+				if($fname==""|| $lname==""|| $uname==""|| $pass==""|| $email==""|| $phone=="")
+				{
+					die('Some of the fields are empty!<br>Please fill all fields');
+				}
+					$sql="INSERT INTO `admin` (`first_name`, `last_name`, `username`, `password`, `email`, `phone`) VALUES ('{$fname}','{$lname}','{$uname}','{$enpass}','{$email}','{$phone}');";
+				$result=mysqli_query($con,$sql);
+				if(!$result)
+				{
+					die('Your statement failed  '.mysqli_error($con));
+				}
+			}
+			?>
+		</div>
+	</center>
+
+</body>
+</html>
