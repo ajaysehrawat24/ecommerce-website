@@ -1,0 +1,131 @@
+<?php include '../common/ecom_dbconnect.php';
+session_start(); ?>
+
+
+
+<html>
+<head>
+    <style type="text/css">
+        .form_center
+        {
+            width: 50%;
+        }
+        input[type=text]
+        {
+            font-size: 30px;
+            border:2px solid #f1f1f1;
+            width: 70%;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        input[type=submit]
+        {
+            width: 150px;
+            height: 45px;
+            border:2px solid grey;
+            font-size: 20px;
+            background-color: Orange;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+    <meta  name="size" content="width=device-width" initial-scale="1"  >
+    <title>Products</title>
+    <link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+</style>
+
+</head>
+<body >
+    <nav class="navbar navbar-inverse navbar-fixed-top  ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+                <a class="navbar-brand" href="ecom_products.php" style="font-weight: bold;">Ecommerce</a>
+            </div>
+ <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                 <li style="font-size: 20px;" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Categories <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li style="font-size: 20px"><a href="ecom_category.php?category=mobiles">Mobiles and computers</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Appliances">Appliances</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Fashion">Fashion</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=kitchen">kitchen</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Decor">Home Decor</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Games">Games and Music</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Sports">Sports and Fitness</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Toys">Toys and baby Products</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Books">Books</a></li>
+          <li style="font-size: 20px"><a href="ecom_category.php?category=Foods">Foods</a></li>
+        </ul>
+      </li>
+                
+                <li style='font-size: 20px' ><a href="ecom_orders.php">  ViewOrders <span class="glyphicon glyphicon-shopping-cart  "></span></a></li>
+                <li style='font-size: 20px' ><a href="ecom_cart.php"> View Cart <span class="glyphicon glyphicon-shopping-cart  "></span></a></li>
+                <?php   if(!isset($_SESSION['user_name']))
+                {
+                    echo " <li style='font-size:20px' class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown' href='#''> <span class='glyphicon glyphicon-user '></span>Account<span class='caret'></span></a>
+                    <ul class='dropdown-menu'>
+                    <li style='font-size:20px' ><a href='../register/ecom_register.php'>Sign-up</a></li>
+                    <li style='font-size:20px' ><a href='ecom_user_login.php'>Log-in</a></li>
+                    
+                    </ul></li>";
+                } 
+                else
+                {
+                    echo "<li style='font-weight:bold;font-size: 20px;'><a href=''>";
+                    echo("<span class='glyphicon glyphicon-star'></span>"."welcome".' '.$_SESSION['user_name']);
+                    echo "</a></li>";
+                    echo "<li style='font-size: 20px' ><a href='ecom_user_logout.php'>  Logout <span class='glyphicon glyphicon-log-out ''></span></a></li>";
+                }
+                ?>
+
+            </ul>
+        </div>
+        </div>
+    </nav>
+<div style="margin-top: 100px" class="well well-sm">
+    <?php   $category=$_GET['category'] ?>
+    <center><h1><?php   echo ($category); ?></h1></center>
+</div>
+    
+    
+    <div class="fluid-container"  style="margin-top: 20px;padding-left: 20px;padding-right: 20px">
+
+    <div class="row" style="margin-top: 10px">
+        <?php   
+        $category=$_GET['category'];
+        $sql="select * from products where category LIKE '%$category%' ";
+        $result=mysqli_query($con,$sql);
+        $local='../admin/';
+        while($row=mysqli_fetch_assoc($result))
+        {
+            $title=$row['prod_title'];
+            $price=$row['prod_price'];
+            $quantity=$row['prod_quantity'];
+            $image=$row['prod_image'];
+            $p_id=$row['prod_id'];
+
+            ?>
+            <div class="col-sm-4" style="border:5px solid #f1f1f1">
+                <div style="margin-top: 20px;"> <a href="ecom_product_home.php?product_id=<?php echo ($p_id) ?>"><img  src="<?php echo($local.$image); ?> " height="300px" width=100% ></a></div>
+                <h1 style="float: left"><a href="ecom_product_home.php?product_id=<?php echo ($p_id) ?>" style="color:black;font-size: 20px;font-weight: bold"><?php echo ($title); ?></a></h1>
+                <h1   style="float: right;color: green;font-size: 20px;font-weight: bold;"><?php echo ("₹ ".$price); ?></h1>
+                
+            </div>   
+        <?php } ?>
+    </div>
+</div>
+</body>
+</html>
