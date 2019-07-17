@@ -1,0 +1,155 @@
+<?php include '../common/ecom_dbconnect.php' ;
+	session_start();
+?>
+	
+
+
+<html>
+<head>
+		<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript">
+  	$(function()
+  	{
+  		$('#prod_itm').slideUp(1);
+  		$('#prod_itm').slideDown(100);
+  	});
+  </script>
+	<style type="text/css">
+		.form_center
+		{
+			width: 50%;
+			border:2px solid green;
+			padding: 10px;
+			box-shadow: 5px 1px 10px 2px;
+			border-radius: 10px;
+		}
+		@media only screen and (max-width: 768px) {
+ 
+  			[class=form_center] {
+    		width: 95%;
+ 		 }
+			}
+	</style>
+	<meta  name="size" content="width=device-width"	initial-scale="1"  >
+	<title>Login</title>
+	<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+</style>
+
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="ecom_products.php" style="font-weight: bold;">Ajay Sehrawat</a>
+        </div>	
+
+    </div>
+</nav>
+	<center>
+		<div class="well well-sm" id="prod_itm">
+			<h1>E-Commerce</h1>
+		</div>
+	</center>
+
+	<center >
+		<div class="form_center">
+		<h3 style="font-weight: bold;">LOGIN</h3>
+		
+			<form action="ecom_user_login.php" method="post" >
+				<div class="input-group" >
+
+					<span class="input-group-addon" ><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  id="email" type="text" class="form-control" name="username" placeholder="Username">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+					<input  input class="form-control input-lg"  type="password" class="form-control" name="password" placeholder="Pasword">
+				</div><br>
+				<input type="submit" class="btn btn-success  btn-block" name="login" value="Login">
+				<h4 style="font-weight: bold;">or</h4>
+			</form>
+			<form action="../register/ecom_register.php">
+				<input type="submit" class="btn btn-primary btn-block"  name="Register" value="Signup">
+			</form>
+		</div><br>
+	
+	<div style="font-size: 20px;color: red;font-weight: bold;">
+		<?php 
+
+
+		include '../common/ecom_dbconnect.php';
+		if(isset($_POST['login']))
+		{
+
+			$uname=mysqli_real_escape_string($con,$_POST['username']);
+			$pass=mysqli_real_escape_string($con,$_POST['password']);
+            $login_flag=0;
+
+			if($uname==""|| $pass=="")
+			{
+				die('Some of the fields are empty!<br>Please fill all fields');
+			}
+			$sql="select * from users";
+			$result=mysqli_query($con,$sql);
+			if(!$result)
+			{
+				die('Your statement failed'.mysqli_error($con));
+			}
+			while($row=mysqli_fetch_assoc($result))
+			{
+				$db_fname=$row['first_name'];
+				$db_lname=$row['last_name'];
+				$db_uname=$row['username'];
+				$db_pass=$row['password'];
+				$db_id=$row['id'];
+				$db_email=$row['email'];
+				$db_phone=$row['phone'];
+				$db_address=$row['address'];
+
+                
+			if($uname==$db_uname && password_verify($pass, $db_pass))
+			{
+				
+					$_SESSION['user_name']=$db_uname;
+					$_SESSION['user_email']=$db_email;
+					$_SESSION['user_fname']=$db_fname;
+					$_SESSION['user_lname']=$db_lname;
+					$_SESSION['user_id']=$db_id;
+					$_SESSION['user_phone']=$db_phone;
+					$_SESSION['user_address']=$db_address;
+					$login_flag=1;
+			
+			}
+
+		}
+		if($login_flag==1)
+		{
+		  header("Location:ecom_products.php");  
+		}
+		else if($login_flag==0)
+		{
+		    die("<center><h3 style='font-weight:bold'>Login Failed!<br>Username or Password is Incorrect</h3></center>");
+		}
+
+		}
+
+
+		?>
+	</div>
+		</center>
+
+</body>
+</html>
