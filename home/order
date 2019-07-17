@@ -1,0 +1,153 @@
+	<?php include '../common/ecom_dbconnect.php';
+	ob_start();
+
+	session_start() ?>
+
+
+
+	<html>
+	<head>
+		<style type="text/css">
+			
+		</style>
+		<meta  name="size" content="width=device-width"	initial-scale="1"  >
+		<title>cart</title>
+		<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	</head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+	</style>
+
+	</head>
+	<body >
+	<nav class="navbar navbar-inverse navbar-fixed-top	">
+		<div class="navbar-header">
+			 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+                <a class="navbar-brand" href="ecom_products.php" style="font-weight: bold;">Ajay Sehrawat</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+<ul class="nav navbar-nav navbar-right">
+
+				
+				<li style='font-size: 20px' ><a href="ecom_cart.php">  ViewCart <span class="glyphicon glyphicon-shopping-cart	"></span></a></li>
+				
+				<?php 	if(!isset($_SESSION['user_name']))
+				{
+					echo " <li style='font-size:20px' class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown' href='#''> <span class='glyphicon glyphicon-user '></span>Account<span class='caret'></span></a>
+					<ul class='dropdown-menu'>
+					<li style='font-size:20px' ><a href='../register/ecom_register.php'>Sign-up</a></li>
+					<li style='font-size:20px' ><a href='ecom_user_login.php'>Log-in</a></li>
+					
+					</ul></li>";
+				} 
+				else
+				{
+					echo "<li style='font-weight:bold;font-size: 20px;'><a href=''>";
+					echo("<span class='glyphicon glyphicon-star'></span>"."welcome".' '.$_SESSION['user_name']);
+					echo "</a></li>";
+					echo "<li style='font-size: 20px' ><a href='ecom_user_logout.php'>  Logout <span class='glyphicon glyphicon-log-out	''></span></a></li>";
+				}
+				?>
+
+			</ul>
+</div>
+		</div>
+		</nav>
+			
+			<center><br><br>
+				<div class="well well-sm"><h1>Your Orders</h1></div>
+				<div class="fluid-container" style="padding: 20px;overflow-x:auto">
+					<table class="table table-bordered">
+
+						<thead>
+							<tr class='success' style="  font-weight: bold">
+								<th>Id</th>
+								<th>Product</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Image</th>
+								<th>Address</th>
+								<th>Date</th>
+								<th>Action</th>
+								<th>Amount</th>
+							</tr>
+						</thead>	
+
+						<?php   
+						if(isset($_SESSION['user_name']))
+						{
+
+								$user_id=$_SESSION['user_id'];
+						$sql="select * from orders  where user_id='{$user_id}  order by order_id  		'";
+						$result=mysqli_query($con,$sql);
+						if (mysqli_num_rows($result)==0) {
+							echo "You have not placed any orders";
+						}
+						$local='../admin/';
+						while($row=mysqli_fetch_assoc($result))
+						{
+							$user_name=$row['user_name'];
+							$p_title=$row['prod_title'];
+							$p_price=$row['prod_price'];
+							$p_tmp_image=$row['prod_image'];
+							$address=$row['user_address'];
+							$order_date=$row['order_date'];
+							$order_id=$row['order_id'];
+							$p_image=$local.$p_tmp_image;
+							$order_qty=$row['order_quantity'];
+							$tot_amt=$row['total_amount'];
+							
+							echo "<tbody> ";
+							echo "<tr class='warning' style='font-weight:bold'>";
+							echo "<td>{$order_id} </td>";
+							echo "<td>{$p_title} </td>";
+							echo "<td>{$p_price}₹ </td>";
+							echo "<td>{$order_qty} </td>";
+							echo "<td> <img src='{$p_image}' height='50px'> </td>";
+							echo "<td>{$address} </td>";
+							echo "<td>{$order_date} </td>";
+							
+							echo "<td><a href='ecom_orders.php?delete_order_id={$order_id}'>Cancel</a></td>";
+							echo "<td>{$tot_amt}₹ </td>";
+							echo "</tr>";
+							echo("</tbody>");
+
+						}
+						if(isset($_GET['delete_order_id']))
+						{
+							$delete_id=$_GET['delete_order_id'];
+							$query="delete from orders where order_id={$delete_id}";
+							$result=mysqli_query($con,$query);
+							header('Location:ecom_orders.php');
+						}
+						
+						}
+
+						?>
+
+
+					</div>
+				</table>
+			</div>
+
+			<div style="font-size: 45px;	"><?php if(!isset($_SESSION['user_id']))
+{
+	echo "<a href='ecom_user_login.php'> Please Login to View your Orders</a> ";
+} 
+
+?></div>
+						
+						
+		</center>
+
+	</body>
+	</html>
