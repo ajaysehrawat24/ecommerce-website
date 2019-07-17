@@ -1,0 +1,44 @@
+<?php session_start(); ?>
+			<?php
+
+			
+			include '../common/ecom_dbconnect.php';
+			$prod_id=$_GET['prod_id'];
+			$order=$_GET['order'];
+			$sql1="select * from products where prod_id='{$prod_id}'";
+			$result1=mysqli_query($con,$sql1);
+			if(!$result1)
+				{
+					die('Your statement failed'.mysqli_error($con));
+				}
+			while($row=mysqli_fetch_assoc($result1))
+			{
+				$p_name=$row['prod_title'];			
+				$p_price=$row['prod_price'];	
+				$p_image=$row['prod_image'];
+				$p_id=$row['prod_id'];	
+
+			}
+			?>
+			<?php
+			$user_id=$_SESSION['user_id'];
+			$date=date("d,D,y ");
+				$sql="insert into cart(user_id,prod_id,prod_title,prod_price,prod_image,date) values('{$user_id}','{$prod_id}','{$p_name}','{$p_price}','{$p_image}','{$date}')";
+				$result2=mysqli_query($con,$sql);
+				if(!$result2)
+				{
+					die('Your statement failed'.mysqli_error($con));
+				}
+						if(isset($_GET['order']))
+						{
+							header("location:ecom_cart.php?order=1");
+						}
+
+						else if(isset($_GET['prod_id']))
+						{
+							header("location:ecom_product_home.php?product_id=$p_id && warn=1");
+						}
+						
+
+			
+			?>
