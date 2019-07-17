@@ -1,0 +1,15 @@
+<?php 
+	session_start();
+?>
+
+		<?php 
+		$id=$_GET['prod_id'];
+		if(isset($_SESSION['user_name'])) 
+		{
+			header("location:ecom_add_cart.php?prod_id=$id");
+		}
+		else
+		{
+			header("location:ecom_user_login.php?prod_id=$id");
+		}
+		?>
