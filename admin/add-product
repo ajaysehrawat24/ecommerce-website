@@ -1,0 +1,137 @@
+		
+			<?php
+			include '../common/ecom_dbconnect.php';
+			if(isset($_POST['register']))
+			{
+				$image=$_FILES['prod_img']['name'];
+    			$img_temp=$_FILES['prod_img']['tmp_name'];
+    			$local="images/";
+    			move_uploaded_file($img_temp,$local.$image);
+    			$imz=$local.$image;
+
+				$p_name=mysqli_real_escape_string($con,$_POST['name']);
+				$p_price=mysqli_real_escape_string($con,$_POST['price']);
+				$p_qty=mysqli_real_escape_string($con,$_POST['qty']);
+				$p_cat=mysqli_real_escape_string($con,$_POST['sel_cat']);
+				$p_qty=mysqli_real_escape_string($con,$_POST['qty']);
+				$p_cat=mysqli_real_escape_string($con,$_POST['sel_cat']);
+				$p_description=mysqli_real_escape_string($con,$_POST['description']);
+				$p_tags=mysqli_real_escape_string($con,$_POST['tags']);
+
+				if($p_name==""|| $p_price==""|| $p_qty=="" || $p_description=="" || $p_tags=="")
+				{
+					die('Some of the fields are empty!<br>Please fill all fields');
+				}
+				$sql="insert into products(`prod_title`, `prod_price`, `prod_quantity`, `description`,`prod_image`,`category`,`p_tags`) values('{$p_name}','{$p_price}','{$p_qty}','{$p_description}','{$imz}','{$p_cat}','{$p_tags}')";
+				$result=mysqli_query($con,$sql);
+				if(!$result)
+				{
+					die('Your statement failed'.mysqli_error($con));
+				}
+			}
+			?>
+	
+
+
+<html>
+<head>
+	<style type="text/css">
+		.form_center
+		{
+			width: 50%;
+		}
+	</style>
+	<meta  name="size" content="width=device-width"	initial-scale="1"  >
+	<title>register</title>
+	<link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+</style>
+
+</head>
+<body >
+	<nav class="navbar navbar-inverse 	">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="ecom_admin.php">Admin</a>
+    </div>
+  
+    <ul class="nav navbar-nav navbar-right">
+        <li style="font-size: 15px;font-weight: bold;"><a href="ecom_create_admin.php"><span class="glyphicon glyphicon-plus-sign"></span> Create Admin</a></li>
+        <li class="dropdown" style="font-size: 15px;font-weight: bold;"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-eye-open"></i> View Tables <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li style="font-size: 20px"><a href="ecom_user_tab.php">Users</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_products.php">Products</a></li>
+          <li style="font-size: 20px"><a href="ecom_view_orders.php"> View Orders</a></li>
+        </ul>
+      </li>
+  
+      <li style="font-size: 15px;font-weight: bold;"><a href="ecom_admin_logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+	<center>
+		<div class="well well-sm" style="font-weight: bold;color: #000;font-size: 30px;">ADD PRODUCT</div>
+		<div class="form_center">
+
+
+			<form action="ecom_add_product.php" method="post" enctype="multipart/form-data">
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input input class="form-control input-lg"  id="email" type="text" class="form-control" name="name" placeholder="Product Title">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="price" placeholder="Price">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="qty" placeholder="Quantity">
+				</div><br>
+				<input type="file" name="prod_img"><br><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<select  name="sel_cat" style="width: 100%;height: 40px">
+						<option style="font-weight: bold">Electronics	</option>
+						<option style="font-weight: bold">Mobiles and Computers	</option>
+						<option style="font-weight: bold">Appliances	</option>
+						<option style="font-weight: bold">Fashion	</option>
+						<option style="font-weight: bold">Kitchen	</option>
+						<option style="font-weight: bold">Home Decor	</option>
+						<option style="font-weight: bold">Games and Music	</option>
+						<option style="font-weight: bold">Sports and Fitness	</option>
+						<option style="font-weight: bold">Toys and Baby Products	</option>
+						<option style="font-weight: bold">Books	</option>
+						<option style="font-weight: bold">Food</option>
+					</select>
+				</div><br>
+				
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="description" placeholder="Description">
+				</div><br>
+				<div class="input-group">
+
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input  input class="form-control input-lg"  type="text" class="form-control" name="tags" placeholder="Product Tags">
+				</div><br>
+				<input type="submit" class="btn btn-primary btn-block" name="register" value="Add"><br>
+			</form>
+
+		</div>
+
+	</center>
+
+</body>
+</html>
